@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNetCore.Authorization
+
+@using PreInfoTrans.Models
+@model IEnumerable<PreInfoTrans.Models.Epi>
+
+@{
+    ViewData["Title"] = "Отчеты";
+    bool isEmployee = ViewData["IsEmployee"].Equals("true") ? true : false;
+}
+<script>
+    function printContent() {
+        let content = document.getElementById("printableArea").innerHTML;
+        let originalBody = document.body.innerHTML;
+        document.body.innerHTML = content;
+        window.print();
+        document.body.innerHTML = originalContent;
+    }
+    window.addEventListener("afterprint", function (event) { location.reload(); });
+</script>
+
+<div id="printableArea">
+    <h1 class="display-6 text-center">Отчет по ЭПИ (ТДТС), в отношении которых до истечения срока временного ввоза/вывоза осталось 7 или менее календарных дней</h1>
+
+    <table id="epiTable" class="table table-hover table-bordered border-dark table-sm">
+        <thead class="text-center">
+        <th>@Html.DisplayNameFor(m => m.DocName)</th>
+        <th>@Html.DisplayNameFor(m => m.DocDate)</th>
+        <th>@Html.DisplayNameFor(m => m.Targets)</th>
+        <th>@Html.DisplayNameFor(m => m.TsmpFormatedString)</th>
+        <th>@Html.DisplayNameFor(m => m.RegNumTDTS)</th>
+        <th>@Html.DisplayNameFor(m => m.RegDateTime)</th>
+        <th>@Html.DisplayNameFor(m => m.RegNumOutTDTS)</th>
+        <th>@Html.DisplayNameFor(m => m.RegComleteDateTime)</th>
+        <th>@Html.DisplayNameFor(m => m.Result)</th>
+        <th>@Html.DisplayNameFor(m => m.RegCompleteTDTS)</th>
+        <th>@Html.DisplayNameFor(m => m.RegEndDate)</th>
+            @if (!isEmployee) { <th>Сотрудник</th> }
+        </thead>
+        <thead class="text-center">
+            @{
+                int columns = 12;
+                if (isEmployee) columns = 11;
+                for (int i = 1; i <= columns; i++)
+                {
+                <th>@i</th>
+                }
+            }
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="table-row" data-id="@item.Id">
+                    <td>@Html.DisplayFor(m => item.DocName)</td>
+                    <td>@Html.DisplayFor(m => item.DocDate)</td>
+                    <td>@Html.DisplayFor(m => item.Targets)</td>
+                    <td>@Html.DisplayFor(m => item.TsmpFormatedString)</td>
+                    <td>@Html.DisplayFor(m => item.RegNumTDTS)</td>
+                    <td>@Html.DisplayFor(m => item.RegDateTime)</td>
+                    <td>@Html.DisplayFor(m => item.RegNumOutTDTS)</td>
+                    <td>@Html.DisplayFor(m => item.RegComleteDateTime)</td>
+                    <td>@Html.DisplayFor(m => item.Result)</td>
+                    <td>@Html.DisplayFor(m => item.RegCompleteTDTS)</td>
+                    <td>@Html.DisplayFor(m => item.RegEndDate)</td>
+                    @if (!isEmployee) {<td>@Html.DisplayFor(m => item.CreatorId)</td>}
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<br />
+<div class="btn-group" role="group">
+    <a class="btn btn-lg btn-success" type="button" onClick="printContent()">Отправить на печать</a>
+</div>

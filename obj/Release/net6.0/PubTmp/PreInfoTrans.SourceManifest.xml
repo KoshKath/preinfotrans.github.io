@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sitemanifest>
+  <IisApp path="D:\БГУИР\5 семестр\проект\PreInfoTrans\obj\Release\net6.0\PubTmp\Out\" />
+  <dbfullsql path="D:\БГУИР\5 семестр\проект\PreInfoTrans\obj\Release\net6.0\PubTmp\EFSQLScripts\PreInfoTrans.Data.AppDbContext.sql" />
+  <dbfullsql path="D:\БГУИР\5 семестр\проект\PreInfoTrans\obj\Release\net6.0\PubTmp\EFSQLScripts\PreInfoTrans.Data.EpiDbContext.sql" />
+</sitemanifest>

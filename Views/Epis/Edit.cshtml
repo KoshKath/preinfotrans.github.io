@@ -1,0 +1,370 @@
+﻿@using System.ComponentModel.DataAnnotations
+@* @model PreInfoTrans.Models.EpiTsmsViewModel*@
+@model PreInfoTrans.Models.Epi
+
+@{
+    ViewData["Title"] = "Редактирование";
+}
+
+<div class="col-md-8"><h1>Форма ЭПИ</h1><br><h3>док. № @Html.DisplayFor(model => model.DocName)</h3></div>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Сообщение ФЛК: </strong> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* СКРЫТЫЕ ПОЛЯ, ЧТОБЫ ДАННЫЕ НЕ ОЧИЩАЛИСЬ ПРИ СОХРАНЕНИИ *@
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatorId" />
+            <input type="hidden" asp-for="DocName" />
+            <input type="hidden" asp-for="DocDate" />
+            <input type="hidden" asp-for="Result" />
+            <input type="hidden" asp-for="TsmpFormatedString" />
+            <input type="hidden" asp-for="RegNumTDTS" />
+            <input type="hidden" asp-for="RegDateTime" />
+            <input type="hidden" asp-for="RegNumOutTDTS" />
+            <input type="hidden" asp-for="RegEndDate" />
+            <input type="hidden" asp-for="RegCompleteTDTS" />
+            <input type="hidden" asp-for="RegComleteDateTime" />
+            <input type="hidden" asp-for="Targets" />
+            <input type="hidden" name="id" value="@Model.Id" />
+            
+            
+            @*СВЕДЕНИЯ О ТС*@
+            <br />
+            <div class="row">
+                <div class="col md-4">
+                        <label asp-for="TransportationType"></label>:
+                        <span asp-validation-for="@Model.TransportationType" class="text-danger"></span></div>
+                <div class="col md-4">
+                    <select asp-for="TransportationType" id="tsmpTypeSelect" class="form-select form-select-sm">
+                        <option  class="form-control form-select" value="" selected>выбрать тип транспорта</option>
+                        @if (ViewData["UniqueTypes"] != null)
+                        {
+                            foreach (var t in ViewData["UniqueTypes"] as List<TsmpTypes>)
+                            {
+                               <option value="@t.TypeCode">@t.TypeName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+               <br />
+            
+            <div class="form-group">
+                <table class="table table-responsive-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Марка, модель</th>
+                            <th scope="col">Тип</th>
+                            <th scope="col">Номер регистрации</th>
+                            <th scope="col">Страна регистрации</th>
+                            <th scope="col">Идентификационный номер</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Tsmp tska in ViewData["Tska"] as List<Tsmp>)
+                        {
+                            <tr>
+                                <td>@tska.Brand @tska.Model</td>
+                                <td>@tska.Type</td>
+                                <td>@tska.RegNum</td>
+                                <td>@tska.RegCountry</td>
+                                <td>@tska.VinCode</td>
+                                <td><a asp-action="Delete" class="btn btn-outline-danger btn-sm" asp-controller="Tsmps" asp-route-id="@tska.Id">Удалить</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @* <span asp-validation-for="Tsmps" class="text-danger"></span> *@
+            <p>
+                <a  id="addTsmpButton" asp-action="Create" class="btn btn-outline-primary disabled" asp-controller="Tsmps" asp-route-docname="@Model.DocName" asp-route-tsmptype="">Добавить ТС</a>
+            </p>
+            <script>
+                // Получаем ссылки на элементы select и ссылку "Добавить ТС"
+                const tsmpTypeSelect = document.getElementById('tsmpTypeSelect');
+                const addTsmpButton = document.getElementById('addTsmpButton');
+
+                // Добавляем слушатель события на изменение значения в select
+                tsmpTypeSelect.addEventListener('change', function () {
+                    // Получаем выбранное значение из select
+                    const selectedTsmpType = tsmpTypeSelect.value;
+                    // Получаем текущий URL-адрес
+                    let currentUrl = addTsmpButton.getAttribute('href');
+                   
+                    // Заменяем значение параметра tsmptype на выбранное значение
+
+                    const newUrl = currentUrl.includes('tsmptype') ? currentUrl.replace(/tsmptype=[^&]*/, `tsmptype=${ selectedTsmpType }`) : `${currentUrl}&tsmptype=${selectedTsmpType}`;
+                    // Устанавливаем новый URL-адрес для ссылки "Добавить ТС"
+                    addTsmpButton.setAttribute('href', newUrl);
+                    console.log(selectedTsmpType);
+                    if (!selectedTsmpType) addTsmpButton.setAttribute('class', 'btn btn-outline-primary disabled'); else
+                    addTsmpButton.setAttribute('class', 'btn btn-outline-primary');
+                });
+            </script>
+            @* <div class="form-group">
+                <label asp-for="DocName" class="control-label"></label>
+                <input asp-for="DocName" class="form-control" readonly/>
+                <span asp-validation-for="DocName" class="text-danger"></span>
+            </div> *@
+            <hr />
+            <div class="form-group">
+                <span class="input-group-text">Лицо, осуществляющее перевозку</span>
+                <textarea class="form-control" aria-label="With textarea" readonly>@ViewData["Carrier"]</textarea>
+                <br />
+            <p>
+                    @if (@ViewData["Carrier"] as string == "")
+                    {
+                        <a asp-action="Create" class="btn btn-outline-primary" asp-controller="Carriers" asp-route-id="@Model.Id">Добавить</a>
+                    } else
+                    {
+                       <a asp-action="Delete" class="btn btn-outline-primary" asp-controller="Carriers" asp-route-id="@Model.Id">Удалить</a> 
+                    }
+                    
+                </p>
+            </div>
+            <br />
+            <div class="form-group">
+                <span class="input-group-text">Лицо, ответственное за использование транспортного средства</span>
+                <textarea class="form-control" aria-label="With textarea" readonly>@ViewData["Owner"]</textarea>
+                <br />
+                <p>
+                    @if (@ViewData["Owner"] as string == "")
+                    {
+                        <a asp-action="Create" class="btn btn-outline-primary" asp-controller="Owners" asp-route-id="@Model.Id">Добавить</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Delete" class="btn btn-outline-primary" asp-controller="Owners" asp-route-id="@Model.Id">Удалить</a>
+                    }
+
+                </p>
+            </div>
+            <hr />
+            <br />
+            @* БЛОК МАРШРУТА И ЭКИПАЖА *@
+            <div class="row">
+                <div class="form-group">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="DirectionIn" value="true" id="directionInTrue">
+                        <label class="form-check-label" for="directionInTrue">
+                            <h5>Ввоз</h5>
+                        </label>
+                    </div>&nbsp&nbsp&nbsp
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="DirectionIn" value="false" id="directionInFalse">
+                        <label class="form-check-label" for="directionInFalse">
+                            <h5>Вывоз</h5>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col col-md-6">
+                    <h4>Маршрут</h4>
+                    <div class="form-group">
+                        <label asp-for="Route" class="control-label"></label><span asp-validation-for="Route" class="text-danger"></span>
+                        <input asp-for="Route" class="form-control" data-val="true" data-val-required=" не указан!" required />
+                        
+                        <label asp-for="RouteCountry" class="control-label"></label>
+                        <div>
+                            <select asp-for="RouteCountry" required class="form-control form-select" aria-describedby="RegCountryHelpInline">
+                                @foreach (var c in ViewData["Countries"] as List<Countries>)
+                                {
+                                    <option value="@c.CountryName">@c.CountryName</option>
+                                }
+                            </select>
+                        </div>
+                        
+                        <span asp-validation-for="RouteCountry" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <div class="col col-md-4">
+                    <div class="form-group">
+                        <h4>Экипаж</h4>
+                        <label  class="control-label">Количество</label>
+                        @* <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="isCrewYes" name="isCrew" value="1" @(Model.IsCrew >= 1 ? "checked" : "") />
+                            <label class="form-check-label" for="isCrewYes">Да</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="isCrewNo" name="isCrew" value="0" @(Model.IsCrew < 1 ? "checked" : "") />
+                            <label class="form-check-label" for="isCrewNo">Нет</label>
+                        </div> *@
+                        
+                    </div>
+
+                    <div class="form-group">
+
+                        <input asp-for="IsCrew" data-val="true"
+                               data-val-range="Введите положительное значение"
+                               data-val-range-min="0" id="isCrewInput" class="form-control" type="number" />
+                        <span asp-validation-for="IsCrew" class="text-danger"></span>
+                    </div>
+
+                    @* <script>
+                        document.querySelectorAll('input[name="isCrew"]').forEach(function (elem) {
+                            elem.addEventListener('change', function () {
+                                var isCrewInput = document.getElementById('isCrewInput');
+                                isCrewInput.value - this.value;
+                                isCrewInput.hidden = this.value === '0';
+                            });
+                        });
+                    </script> *@
+                </div>
+            </div>
+            @* БЛОК ПАССАЖИРОВ, ПРИПАСОВ И СВЕДЕНИЙ О ТОВАРЕ *@
+            <br />
+            <div class="row">
+                <div class="col col-md-3">
+                    <div class="form-group">
+                        <h4>Пассажиры</h4>
+                        <label class="control-label">Количество</label>
+                        @* <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="IsPassengersYes" name="IsPassengers" value="1" @(Model.IsPassengers >= 1 ? "checked" : "") />
+                            <label class="form-check-label" for="IsPassengersYes">Да</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="IsPassengersNo" name="IsPassengers" value="0" @(Model.IsPassengers < 1 ? "checked" : "") />
+                            <label class="form-check-label" for="IsPassengersNo">Нет</label>
+                        </div> *@
+                        
+                    </div>
+
+                    <div class="form-group">
+                        <input asp-for="IsPassengers" type="number" id="IsPassengersInput" data-val="true"
+                               data-val-range="Введите положительное значение"
+                               data-val-range-min="0" class="form-control" /><span asp-validation-for="IsPassengers" class="text-danger"></span>
+                    </div>
+
+                    @* <script>
+                        document.querySelectorAll('input[name="IsPassengers"]').forEach(function (elem) {
+                            elem.addEventListener('change', function () {
+                                var IsPassengersInput = document.getElementById('IsPassengersInput');
+                                IsPassengersInput.value = this.value;
+                                IsPassengersInput.hidden = this.value === '0';
+                            });
+                        });
+                    </script> *@
+                </div>
+                <div class="col col-md-3">
+                    <div class="form-group">
+                        <h4>Припасы</h4>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" asp-for="IsSupplies" value="true" id="IsSuppliesTrue">
+                            <label class="form-check-label" for="IsSuppliesTrue">
+                                Да
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" asp-for="IsSupplies" value="false" id="IsSuppliesFalse">
+                            <label class="form-check-label" for="IsSuppliesFalse">
+                                Нет
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-md-5">
+                    <div class="form-group">
+                        <h4>Сведения о товаре</h4>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" asp-for="IsGoods" value="true" id="IsGoodsTrue">
+                            <label class="form-check-label" for="IsGoodsTrue">
+                                Да
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" asp-for="IsGoods" value="false" id="IsGoodsFalse">
+                            <label class="form-check-label" for="IsGoodsFalse">
+                                Нет
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <hr />
+            @* БЛОК ЗАПЧАСТЕЙ и ОБОРУДОВАНИЯ *@
+            <div class="row">
+                <h4>Запасные части и оборудование</h4>
+                <div class="form-group">
+                    <div class="mb-4">
+                        <label>
+                            <input class="form-check-input form-check-inline" type="radio" name="sparePartsOption" value="yes" id="sparePartsYes" />
+                            Да&nbsp&nbsp
+                        </label>
+                        <label>
+                            <input class="form-check-input form-check-inline" type="radio" name="sparePartsOption" value="no" id="sparePartsNo" checked />
+                            Нет
+                        </label>
+                    </div>
+                    <div class="mb-4">
+                        @* <label for="sparePartsInput" asp-for="SpareParts" class="form-label"></label> *@
+                        <label asp-for="SpareParts" class="input-group-text"></label>
+                        <input asp-for="SpareParts" class="form-control" id="sparePartsInput" readonly />
+                    </div>
+                </div>
+                <script>
+                    document.getElementById('sparePartsYes').addEventListener('change', function () {
+                        document.getElementById('sparePartsInput').removeAttribute('readonly');
+                    });
+
+                    document.getElementById('sparePartsNo').addEventListener('change', function () {
+                        document.getElementById('sparePartsInput').setAttribute('readonly', true);
+                        document.getElementById('sparePartsInput').value = ''; // Очистка поля ввода
+                    });</script>
+            </div>
+
+
+            @*ЦЕЛЬ, СВЕДЕНИЯ И КНОПКИ*@
+            <br />
+            @* <div class="form-group">
+                <div class="row">
+                    <div class="col col-md-4">
+                        <label asp-for="Targets" class="control-label"></label>
+                    </div>
+                    <div class="col col-md-8">
+                        <select asp-for="Targets" class="form-select">
+                            
+                            @foreach (var value in Enum.GetValues(typeof(Targets)))
+                            {
+                                var displayAttribute = typeof(Targets).GetField(Enum.GetName(typeof(Targets), value)).GetCustomAttributes(typeof(DisplayAttribute), false).FirstOrDefault() as DisplayAttribute;
+                                var displayName = displayAttribute != null ? displayAttribute.Name : value.ToString();
+
+                                <option value="@value">@displayName</option>
+                            }
+                        </select>
+                    </div>
+                    </div>
+            </div> *@
+
+            <br />
+            <div class="form-group">
+                <span class="input-group-text">Дополнительные сведения</span>
+                <textarea asp-for="Description" class="form-control" aria-label="With textarea"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />&nbsp<a class="btn btn-danger" asp-action="Index">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

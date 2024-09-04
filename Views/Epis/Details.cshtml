@@ -1,0 +1,89 @@
+﻿@model PreInfoTrans.Models.EpiTsmsViewModel
+
+@{
+    ViewData["Title"] = "Просмотр";
+}
+
+<h1>Просмотр сведений</h1>
+
+<div>
+    <h4>ЭПИ № @Model.EpiDocName</h4>
+    <hr />
+    <dl class="row">
+        @*
+        
+        *@
+        <dt class = "col-sm-4">@Html.DisplayNameFor(m => m.Epi.Result)</dt>
+        <dd class = "col-sm-8">@Html.DisplayFor(m => m.Epi.Result)</dd>
+        @if (Model.Epi.Result == Result.Canceling || Model.Epi.Result == Result.Denied || Model.Epi.Result == Result.Refused || Model.Epi.Result == Result.Revoking)
+        {
+            <dt class="col-sm-4">@Html.DisplayFor(m => m.Epi.Result) по причине</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.CancelReason)</dd>  
+        }
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.DocDate)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.DocDate)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.DirectionIn)</dt>
+        <dd class="col-sm-8 form-check form-check px-3">
+                @{
+                    var checkIn = "Ввоз";
+                    if (!Model.Epi.DirectionIn) { checkIn = "Вывоз"; }
+                }<button disabled class="btn btn-outline-primary btn-sm" type="button">@checkIn</button>
+        </dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.Targets)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.Targets)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.TemporaryInDate)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.TemporaryInDate)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.TsmpFormatedString)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.TsmpFormatedString)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.RegNumTDTS)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.RegNumTDTS)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.RegDateTime)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.RegDateTime)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.RegNumOutTDTS)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.RegNumOutTDTS)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.RegComleteDateTime)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.RegComleteDateTime)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.RegCompleteTDTS)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.RegCompleteTDTS)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.RegEndDate)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.RegEndDate)</dd>
+        <hr>
+        <dt class="col-sm-4">Лицо, осуществляющее перевозку товаров</dt>
+        <dd class="col-sm-8">@Model.Carrier?.GetAllFieldsAsString()</dd>
+        <dt class="col-sm-4">Лицо, ответственное за использование транспортного средства</dt>
+        <dd class="col-sm-8">@Model.Owner?.GetAllFieldsAsString()</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.Route)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.Route)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.RouteCountry)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.RouteCountry)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.IsCrew)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.IsCrew)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.IsPassengers)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.IsPassengers)</dd>
+
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.IsSupplies)</dt>
+        <dd class="col-sm-8 form-check form-switch">
+            @{
+                var checkSupplies = "checked";
+                if (!Model.Epi.IsSupplies) { checkSupplies = ""; }
+            }<input class="form-check-input" type="checkbox" @checkSupplies disabled>
+        </dd>
+
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.IsGoods)</dt>
+        <dd class="col-sm-8 form-check form-switch">@{
+                var checkGoods = "checked"; 
+                if(!Model.Epi.IsGoods) {checkGoods = ""; } 
+                }<input class="form-check-input" type="checkbox" @checkGoods disabled></dd>
+
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.SpareParts)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.SpareParts)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Epi.Description)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Epi.Description)</dd>
+
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.Epi.Id">Редактировать</a> |
+    <a asp-action="Print" class="btn btn-success" asp-route-id="@Model.Epi.Id">Печать</a> |
+    <a asp-action="Index" class="btn btn-secondary">Назад в журнал</a>
+</div>

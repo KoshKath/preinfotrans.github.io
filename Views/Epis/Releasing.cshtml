@@ -1,0 +1,94 @@
+﻿@model PreInfoTrans.Models.Epi
+
+@{
+    ViewData["Title"] = "Подтвердить выпуск";
+}
+
+<h1>Выпуск ЭПИ</h1>
+
+<h3>Подтвердить информацию о выпуске?</h3>
+
+<div>
+    <h4>ЭПИ № @Model.DocName</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(m => m.Result)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(m => m.Result)
+        </dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.DocDate)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.DocDate)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.DirectionIn)</dt>
+        <dd class="col-sm-8 form-check form-check px-3">
+            @{
+                var checkIn = "Ввоз";
+                if (!Model.DirectionIn) { checkIn = "Вывоз"; }
+            }<button disabled class="btn btn-outline-primary btn-sm" type="button">@checkIn</button>
+        </dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Targets)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Targets)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.TsmpFormatedString)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.TsmpFormatedString)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegNumTDTS)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegNumTDTS)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegDateTime)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegDateTime)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegNumOutTDTS)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegNumOutTDTS)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegEndDate)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegEndDate)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegCompleteTDTS)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegCompleteTDTS)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegComleteDateTime)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegComleteDateTime)</dd>
+        <hr />
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Route)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Route)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RouteCountry)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RouteCountry)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.IsCrew)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.IsCrew)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.IsPassengers)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.IsPassengers)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.IsSupplies)</dt>
+        <dd class="col-sm-8 form-check form-switch">
+            @{
+                var checkSupplies = "checked";
+                if (!Model.IsSupplies) { checkSupplies = ""; }
+            }<input class="form-check-input" type="checkbox" @checkSupplies disabled>
+        </dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.IsGoods)</dt>
+        <dd class="col-sm-8 form-check form-switch">
+            @{
+                var checkGoods = "checked";
+                if (!Model.IsGoods) { checkGoods = ""; }
+            }<input class="form-check-input" type="checkbox" @checkGoods disabled>
+        </dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.SpareParts)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.SpareParts)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Description)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Description)</dd>
+    </dl>
+</div>
+
+<div class="btn-group" role="group">
+    <div  class="mr-1">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="RegComleteDateTime" />
+        <a asp-action="Revoking" type="button" asp-route-id="@Model.Id" class="btn btn-warning">Отзыв</a>
+    </div>&nbsp;
+    <div class="mr-1">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="RegComleteDateTime" />
+        <a asp-action="Release" type="button" asp-route-id="@Model.Id" class="btn btn-info">Выпуск</a>
+    </div>&nbsp;
+    <div class="mr-1">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="RegComleteDateTime" />
+        <a asp-action="Refuse" type="button" asp-route-id="@Model.Id" class="btn btn-danger">Отказ в выпуске</a>
+    </div>&nbsp;
+    <a type="button" class="btn btn-secondary" asp-action="Isto">Отмена</a>
+</div>
+

@@ -1,0 +1,91 @@
+﻿@model PreInfoTrans.Models.Epi
+
+@{
+    ViewData["Title"] = "Выпуск";
+}
+
+<h1 class="p-3 bg-warning bg-gradient">Выпустить ЭПИ</h1>
+
+<h3>Выпустить ЭПИ по решению ТО?</h3>
+
+<div>
+    <h4>ЭПИ № @Model.DocName</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(m => m.Result)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(m => m.Result)
+        </dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.DocDate)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.DocDate)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.DirectionIn)</dt>
+        <dd class="col-sm-8 form-check form-check px-3">
+            @{
+                var checkIn = "Ввоз";
+                if (!Model.DirectionIn) { checkIn = "Вывоз"; }
+            }<button disabled class="btn btn-outline-primary btn-sm" type="button">@checkIn</button>
+        </dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Targets)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Targets)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.TsmpFormatedString)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.TsmpFormatedString)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegNumTDTS)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegNumTDTS)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegDateTime)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegDateTime)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegNumOutTDTS)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegNumOutTDTS)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegComleteDateTime)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegComleteDateTime)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegCompleteTDTS)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegCompleteTDTS)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RegEndDate)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RegEndDate)</dd>
+        <hr />
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Route)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Route)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.RouteCountry)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.RouteCountry)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.IsCrew)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.IsCrew)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.IsPassengers)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.IsPassengers)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.IsSupplies)</dt>
+        <dd class="col-sm-8 form-check form-switch">
+            @{
+                var checkSupplies = "checked";
+                if (!Model.IsSupplies) { checkSupplies = ""; }
+            }<input class="form-check-input" type="checkbox" @checkSupplies disabled>
+        </dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.IsGoods)</dt>
+        <dd class="col-sm-8 form-check form-switch">
+            @{
+                var checkGoods = "checked";
+                if (!Model.IsGoods) { checkGoods = ""; }
+            }<input class="form-check-input" type="checkbox" @checkGoods disabled>
+        </dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.SpareParts)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.SpareParts)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Description)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Description)</dd>
+    </dl>
+</div>
+
+<form asp-action="ReleaseConfirmed" class="mr-1">
+        <input type="hidden" asp-for="Id" />
+    <dt class="col-sm-3"><label asp-for="@Model.RegNumOutTDTS" class="control-label col-form-label"></label></dt>
+    <dd class="col-sm-3">
+        <input asp-for="@Model.RegNumOutTDTS" class="form-control" required pattern="\d{5}\/\d{8}" oninvalid="this.setCustomValidity('Должен быть указан номер регистрации в формате 12345/12345678')"
+               oninput="this.setCustomValidity('')" />
+    </dd>
+    <dt class="col-sm-3"><label asp-for="TemporaryInDate" class="control-label col-form-label"></label></dt>
+    <dd class="col-sm-3">
+        <input asp-for="@Model.TemporaryInDate" class="form-control"  />
+    </dd>
+    <span asp-validation-for="@Model.RegNumOutTDTS" class="text-danger"></span>
+    <input type="submit" value="Выпустить" class="btn btn-warning" />
+    <a type="buton" class="btn btn-secondary" asp-action="Index">Отмена</a>
+    </form>
+</div>

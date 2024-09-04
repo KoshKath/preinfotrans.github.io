@@ -1,0 +1,320 @@
+﻿@model PreInfoTrans.Models.EpiTsmsViewModel
+
+@{
+    ViewData["Title"] = "Печать";
+}
+<script>
+    function printContent() {
+        let content = document.getElementById("printableArea").innerHTML;
+        let originalBody = document.body.innerHTML;
+        document.body.innerHTML = content;
+        window.print();
+        document.body.innerHTML = originalContent;
+    }
+    window.addEventListener("afterprint", function (event) { location.reload(); });
+</script>
+<div class="btn-group" role="group"><a class="btn btn-lg btn-success" type="button" onClick="printContent()">Отправить на печать</a>
+    <a class="btn btn-secondary btn-lg" asp-action="Index">Отмена</a>
+</div>
+
+
+<div id="printableArea">
+    <div class="text-end lh-1">
+        <br>УТВЕРЖДЕНА
+        <br>Решением Комиссии
+        <br>Таможенного союза
+        <br>от 14.10.2010 № 422
+    </div>
+    
+    <h4 class="text-center">
+        <br>Форма таможенной декларации на транспортное средство
+    </h4>
+    <p class="text-left">
+        ТАМОЖЕННАЯ ДЕКЛАРАЦИЯ НА ТРАНСПОРТНОЕ СРЕДСТВО
+    </p>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col p-3 border border-dark">
+                1. Ввоз - <span class="border p-1 border-secondary">&nbsp@{
+                        if (Model.Epi.DirectionIn)
+                        {
+                            <b>✓</b>
+                        }
+                        else
+                        {
+                            <b>&nbsp</b>
+                        }
+                    }&nbsp
+                </span> &nbspВывоз - <span class="border p-1 border-secondary">
+                    &nbsp@{
+                        if (!Model.Epi.DirectionIn)
+                        {
+                            <b>✓</b>
+                        }
+                        else
+                        {
+                            <b>&nbsp</b>
+                        }
+                    }&nbsp
+                </span>
+            </div>
+            <div class="col p-3 border border-dark">
+                2. Регистрационный № <b>@Html.DisplayFor(model => model.Epi.DocName)</b>
+            </div>
+        </div>
+        <div class="row border p-3 border-dark">
+            3. Транспортное средство
+        <table class="table table-sm table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">марка, модель</th>
+                <th scope="col">тип</th>
+                <th scope="col">номер регистрации</th>
+                <th scope="col">страна регистрации</th>
+                <th scope="col">идентификационный номер</th>
+            </tr>
+            </thead>
+            <tbody>
+
+                @foreach (Tsmp tska in Model.Tsmps)
+                {
+                    <tr>
+                        <td>@tska.Brand @tska.Model</td>
+                        <td>@tska.Type</td>
+                        <th>@tska.RegNum</th>
+                        <td>@tska.RegCountry</td>
+                    <td>@tska.VinCode</td>
+                </tr>
+                }
+            </tbody>
+            </table>
+        </div>
+
+        <div class="row border p-3 border-dark">4. Лицо, осуществляющее перевозку товаров
+            <p><strong>@Model.Carrier?.GetAllFieldsAsString()</strong></p>
+        <p>Лицо, ответственное за использование транспортного средства</p>
+            <p><strong>@Model.Owner?.GetAllFieldsAsString()</strong></p>
+        </div>
+
+        <div class="row">
+            <div class="col p-3 border border-dark">
+                5. Маршрут
+                <br><strong>
+                    @Model.Epi.RouteCountry, 
+                    @Model.Epi.Route
+                </strong>
+                
+            </div>
+            <div class="col p-3 border border-dark">
+                6. Экипаж
+                <br>@{
+                    var isCrew = "";
+                    if (Model.Epi.IsCrew > 0) isCrew = Model.Epi.IsCrew.ToString(); else isCrew = "нет";
+                }
+                <strong>@isCrew</strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col p-3 border border-dark">
+                <div class="row">
+                    @{
+                        var isPass = "";
+                        if (Model.Epi.IsPassengers > 0) isPass = $" ( {Model.Epi.IsPassengers} ) ";
+                    }
+                    <div class="col">7. Пассажиры </div>@isPass<div class="col">
+                        Да&nbsp - &nbsp<span class="border  border-secondary">
+                            &nbsp@{
+                                if (Model.Epi.IsPassengers > 0)
+                                {
+                                    <b>✓</b>
+                                }
+                                else
+                                {
+                                    <b>&nbsp&nbsp</b>
+                                }
+                            }&nbsp
+                        </span>
+                        <br>Нет - <span class="border  border-secondary">
+                            &nbsp@{
+                                if (Model.Epi.IsPassengers < 1)
+                                {
+                                    <b>✓</b>
+                                }
+                                else
+                                {
+                                    <b>&nbsp&nbsp&nbsp&nbsp</b>
+                                }
+                            }&nbsp
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col p-3 border border-dark">
+                <div class="row">
+                    <div class="col">8. Припасы</div><div class="col">
+                        Да&nbsp - &nbsp<span class="border  border-secondary">
+                            &nbsp@{
+                                if (Model.Epi.IsSupplies)
+                                {
+                                    <b>✓</b>
+                                }
+                                else
+                                {
+                                    <b>&nbsp&nbsp</b>
+                                }
+                            }&nbsp
+                        </span>
+                        <br>Нет - <span class="border  border-secondary">
+                            &nbsp@{
+                                if (!Model.Epi.IsSupplies)
+                                {
+                                    <b>✓</b>
+                                }
+                                else
+                                {
+                                    <b>&nbsp&nbsp&nbsp&nbsp</b>
+                                }
+                            }&nbsp
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col p-3 border border-dark">
+                <div class="row">
+                    <div class="col">9. Сведения о товаре</div><div class="col">
+                        Да&nbsp - &nbsp<span class="border  border-secondary">
+                            &nbsp@{
+                                if (Model.Epi.IsGoods)
+                                {
+                                    <b>✓</b>
+                                }
+                                else
+                                {
+                                    <b>&nbsp&nbsp</b>
+                                }
+                            }&nbsp
+                        </span>
+                        <br>Нет - <span class="border  border-secondary">
+                            &nbsp@{
+                                if (!Model.Epi.IsGoods)
+                                {
+                                    <b>✓</b>
+                                }
+                                else
+                                {
+                                    <b>&nbsp&nbsp&nbsp&nbsp</b>
+                                }
+                            }&nbsp
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row border p-3 border-dark">
+            10. Запасные части и оборудование
+            @if (Model.Epi.SpareParts != null)
+            {
+                <p>
+                    Да&nbsp - &nbsp<span class="border  border-secondary">&nbsp<b>✓</b>&nbsp</span>
+                    &nbspНет - <span class="border  border-secondary">&nbsp&nbsp&nbsp</span>
+                </p>
+            } else
+            {
+                <p>
+                Да&nbsp - &nbsp<span class="border  border-secondary">&nbsp&nbsp&nbsp</span>
+                &nbspНет - <span class="border  border-secondary">&nbsp<b>✓</b>&nbsp</span>
+            </p>
+            }
+            
+            <p>@Html.DisplayFor(m => Model.Epi.SpareParts)</p>
+        </div>
+
+        <div class="row">
+            <div class="col p-3 border border-dark">
+                11. Цель ввоза/вывоза
+                <br>@Html.DisplayFor(m => Model.Epi.Targets)
+            </div>
+            <div class="col p-3 border border-dark">
+                12. Дополнительные сведения
+                <br>@Html.DisplayFor(m => Model.Epi.Description)
+            </div>
+        </div>
+
+        <div class="row border p-3 border-dark">
+            13. Подпись лица, заявляющего сведения _____________  дата заполнения _____________
+            <p> </p>
+            <p> </p>
+        </div>
+
+        <div class="row border p-0 border-dark">
+            <div class="text-center">ТАМОЖЕННЫЙ КОНТРОЛЬ</div>
+        </div>
+
+        <div class="row">
+            <div class=" col border border-dark  mt-0">
+                <div class="container row p-0">
+                    <div class="border p-0 border-dark text-center" style="width: 1.5rem; height: 1.5rem;">A</div>
+                    <div class="mt-0">
+                        Таможенный орган оформивший временный ввоз (вывоз) -
+                        <p></p>
+                        дата регистрации ТДТС
+                        <p></p>
+                        формы таможенного контроля
+                        <p></p>
+                        Срок временного ввоза
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col border border-dark  mt-0">
+                <div class="container row  p-0">
+                    <div class="border p-0 border-dark text-center" style="width: 1.5rem; height: 1.5rem;">B</div>
+                    <div class="mt-0">
+                        Таможенный орган оформивший завершение временного ввоза (вывоза) -
+                        <p></p>
+                        дата регистрации ТДТС
+                        <p></p>
+                        формы таможенного контроля
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col border border-dark  mt-0">
+                <div class="container row p-0">
+                    <div class="border p-0 border-dark text-center" style="width: 1.5rem; height: 1.5rem;">C</div>
+                    <div class ="mt-0">
+                        Промежуточный таможенный орган -
+                        <p></p>
+                        дата совершения таможенной операции -
+                        <p></p>
+                        формы таможенного контроля
+                        <p></p>
+                        Продление срока временного ввоза
+                        <p></p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @for (var i = 0; i < 3; i++)
+            {
+                <div class="col border border-dark mt-0">
+                    <div class="row p-1">
+                    Особые отметки
+                    @for (var j = 0; j<6;j++)
+                    {
+                       <p></p>     
+                    }
+                </div>
+            </div> 
+            }
+        </div>
+    <hr />
+    </div>
+
+</div>

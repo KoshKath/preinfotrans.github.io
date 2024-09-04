@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="PreInfoTrans" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^D:\\БГУИР\\5\ семестр\\проект\\PreInfoTrans\\obj\\Release\\net6\.0\\PubTmp\\Out\\$" />
+  </parameter>
+  <parameter name="PreInfoTrans.Data.AppDbContext" description="" value="Server=(localdb)\mssqllocaldb;Database=PreInfoTrans-db;Trusted_Connection=True;MultipleActiveResultSets=true" tags="dbfullsql">
+    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^D:\\БГУИР\\5\ семестр\\проект\\PreInfoTrans\\obj\\Release\\net6\.0\\PubTmp\\EFSQLScripts\\PreInfoTrans\.Data\.AppDbContext\.sql$" />
+  </parameter>
+  <parameter name="PreInfoTrans.Data.EpiDbContext" description="" value="Server=(localdb)\mssqllocaldb;Database=PreInfoTrans-db;Trusted_Connection=True;MultipleActiveResultSets=true" tags="dbfullsql">
+    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^D:\\БГУИР\\5\ семестр\\проект\\PreInfoTrans\\obj\\Release\\net6\.0\\PubTmp\\EFSQLScripts\\PreInfoTrans\.Data\.EpiDbContext\.sql$" />
+  </parameter>
+</parameters>

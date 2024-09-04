@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@model IEnumerable<PreInfoTrans.Models.Epi>
+
+@{
+    ViewData["Title"] = "Isto";
+}
+
+<h1>Информационная Система Таможенных Органов</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @* @Html.DisplayNameFor(model => model.CreatorId) *@
+                Отправитель
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.DocName)
+            </th>
+            <th>
+                @* @Html.DisplayNameFor(model => model.Result) *@
+                Статус
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatorId)
+            </td>
+ 
+            <td>
+                @Html.DisplayFor(modelItem => item.DocName)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Result)
+                </td>
+            <td>
+                    @if (User.IsInRole("Сотрудник"))
+                    {
+                        if (item.Result == Result.Pending)
+                        {
+                            <a asp-action="Accept" asp-route-id="@item.Id">Принять</a>
+                        }
+                        else if (item.Result == Result.Registration)
+                        {
+                            <a asp-action="Releasing" asp-route-id="@item.Id">Выпуск</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Complete" asp-route-id="@item.Id">Завершить</a>
+                        }
+
+                    }
+                    
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,128 @@
+﻿@model PreInfoTrans.Models.Epi
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Epi</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="CreatorId" class="control-label"></label>
+                <input asp-for="CreatorId" class="form-control" />
+                <span asp-validation-for="CreatorId" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="DirectionIn" /> @Html.DisplayNameFor(model => model.DirectionIn)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="DocName" class="control-label"></label>
+                <input asp-for="DocName" class="form-control" readonly/>
+                <span asp-validation-for="DocName" class="text-danger"></span>
+            </div>
+            <br />
+            <p>
+                <a asp-action="Create" class="btn btn-outline-primary" asp-controller="Tsmps" asp-route-docname="@Model.DocName">Добавить ТС</a>
+            </p>
+            <div class="form-group">
+                <label asp-for="DocDate" class="control-label"></label>
+                <input asp-for="DocDate" class="form-control" />
+                <span asp-validation-for="DocDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegNumTDTS" class="control-label"></label>
+                <input asp-for="RegNumTDTS" class="form-control" />
+                <span asp-validation-for="RegNumTDTS" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegDateTime" class="control-label"></label>
+                <input asp-for="RegDateTime" class="form-control" />
+                <span asp-validation-for="RegDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegNumOutTDTS" class="control-label"></label>
+                <input asp-for="RegNumOutTDTS" class="form-control" />
+                <span asp-validation-for="RegNumOutTDTS" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Result" class="control-label"></label>
+                <input asp-for="Result" class="form-control" />
+                <span asp-validation-for="Result" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Route" class="control-label"></label>
+                <input asp-for="Route" class="form-control" />
+                <span asp-validation-for="Route" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RouteCountry" class="control-label"></label>
+                <input asp-for="RouteCountry" class="form-control" />
+                <span asp-validation-for="RouteCountry" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsPassengers" class="control-label"></label>
+                <input asp-for="IsPassengers" class="form-control" />
+                <span asp-validation-for="IsPassengers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsCrew" class="control-label"></label>
+                <input asp-for="IsCrew" class="form-control" />
+                <span asp-validation-for="IsCrew" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsSupplies" /> @Html.DisplayNameFor(model => model.IsSupplies)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsGoods" /> @Html.DisplayNameFor(model => model.IsGoods)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Targets" class="control-label"></label>
+                <input asp-for="Targets" class="form-control" />
+                <span asp-validation-for="Targets" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegCompleteTDTS" class="control-label"></label>
+                <input asp-for="RegCompleteTDTS" class="form-control" />
+                <span asp-validation-for="RegCompleteTDTS" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegComleteDateTime" class="control-label"></label>
+                <input asp-for="RegComleteDateTime" class="form-control" />
+                <span asp-validation-for="RegComleteDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад к журналу</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

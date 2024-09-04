@@ -1,0 +1,119 @@
+﻿@model PreInfoTrans.Models.TsmpTypesViewModel
+
+@{
+    ViewData["Title"] = "Новое ТС";
+}
+
+<h1>Добавление</h1>
+
+<h4>нового транспортного средства</h4>
+<h4>ЭПИ номер @Html.DisplayFor(m => m.DocName)</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <input type="hidden" asp-for="Tsmp.TypeCode" />
+            <div>@Html.ValidationMessage("TsModel")</div>
+            <div class="row g-3 align-items-center form-group">
+                <div class="col-md-3">
+                    <label asp-for="@Model.Tsmp.RegNum" class="control-label col-form-label"></label>
+                </div>
+                <div class="col-5">
+                    <input  asp-for="@Model.Tsmp.RegNum" class="form-control" aria-describedby="RegNumHelpInline" />
+                </div>
+                <div class="col-auto">
+                    <span id="RegNumHelpInline" asp-validation-for="@Model.Tsmp.RegNum" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="row g-3 align-items-center form-group">
+                <div class="col-md-3">
+                    <label asp-for="@Model.Tsmp.RegCountry" class="control-label col-form-label"></label>
+                </div>
+                <div class="col-5">
+                    <select asp-for="@Model.Tsmp.RegCountry" class="form-control form-select" aria-describedby="RegCountryHelpInline">
+                        @foreach (var c in Model.Countries)
+                        {
+                            <option value="@c.CountryName">@c.CountryName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <span id="RegCountryHelpInline" asp-validation-for="@Model.Tsmp.RegCountry" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="row g-3 align-items-center form-group">
+                <div class="col-md-3">
+                    <label asp-for="@Model.Tsmp.Type" class="control-label col-form-label"></label>
+                </div>
+                <div class="col-5">
+                    <select id="typeSelect" asp-for="@Model.Tsmp.Type" class="form-control form-select" aria-describedby="TypeHelpInline">
+                        @foreach (var tp in Model.TsmpTypes)
+                        {
+                            <option value="@tp.Name">@tp.Code @tp.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <span id="TypeHelpInline" asp-validation-for="@Model.Tsmp.Type" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="row g-3 align-items-center form-group">
+                <div class="col-md-1">
+                    <label asp-for="@Model.Tsmp.Brand" class="control-label col-form-label"></label>
+                </div>
+                <div class="col-3">
+                    <select  id="brandSelect" asp-for="@Model.Tsmp.Brand" class="form-control form-select">
+                        <option value=""> </option>
+                        @foreach (var b in Model.Brands)
+                        {
+                            <option value="@b.BrandName">@b.BrandName</option>
+                        }
+                    </select>
+                </div>
+                <span id="brandSelect" asp-validation-for="@Model.Tsmp.Brand" class="text-danger"></span>
+                <div class="col-md-1">
+                    <label asp-for="@Model.Tsmp.Model" class="control-label col-form-label"></label>
+                </div>
+                <div class="col-3">
+                    <input asp-for="@Model.Tsmp.Model" class="form-control" aria-describedby="BrandHelpInline" />
+                </div>
+            </div>
+            <br />
+            <div class="row g-3 align-items-center form-group">
+                <div class="col-md-3">
+                    <label asp-for="@Model.Tsmp.VinCode" class="control-label col-form-label"></label>
+                </div>
+                <div class="col-5">
+                    <input id="vinCodeInput" asp-for="@Model.Tsmp.VinCode" class="form-control" aria-describedby="VinCodeHelpInline"  />
+                </div>
+                <div class="col-auto">
+                    <span id="VinCodeHelpInline" asp-validation-for="@Model.Tsmp.VinCode" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Tsmp.EpiDocName" class="form-control" readonly />
+            <br />
+            <div id="test"></div>
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-primary" /> |
+                @{
+                    var _id = int.Parse(@Model.DocName);
+                }
+                <a class="btn btn-secondary" asp-controller="Epis" asp-action="Edit" asp-route-id="@_id">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

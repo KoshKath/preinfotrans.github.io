@@ -1,0 +1,27 @@
+﻿@model PreInfoTrans.Models.Epi
+
+@{
+    ViewData["Title"] = "Удалить";
+}
+
+<h1>Удалить ЭПИ номер @Html.DisplayFor(model => model.DocName)</h1>
+
+<h3>Подтвердить действие?</h3>
+<div>
+    <hr />
+    <div class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Result)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Result)
+        </dd>
+    </div>
+
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a type="buton" class="btn btn-secondary" asp-action="Index">Вернуться</a>
+    </form>
+</div>

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<UserWithRoleViewModel>
+
+@{
+    ViewData["Title"] = "Панель администратора";
+}
+
+
+<h1>Панель&nbsp&nbsp управления</h1>
+<h2>пользователями и ролями</h2>
+<br />
+<p>
+    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-success">Добавить пользователя</a>
+</p>
+<br />
+<table class="table table-lg table-hover table-bordered border-succcess table-responsive-md">
+    <thead class="table-success">
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Роль</th>
+            <th>Управление</th>
+            <!-- Другие атрибуты пользователя, которые вы хотите отобразить -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.RoleName</td>
+                <td><a asp-action="Edit" asp-controller="Admin" asp-route-userId="@user.UserId">Редактировать</a></td>
+                <!-- Другие атрибуты пользователя, которые вы хотите отобразить -->
+            </tr>
+        }
+    </tbody>
+</table>

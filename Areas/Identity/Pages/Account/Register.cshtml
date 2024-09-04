@@ -1,0 +1,141 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>нового пользвателя в системе.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating">
+                <input asp-for="Input.UserName" class="form-control" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.UserName"></label>
+                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-floating">
+                <input asp-for="Input.Email" class="form-control"  aria-required="true" />
+                <label asp-for="Input.Email"></label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-floating">
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.Password"></label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                <label asp-for="Input.ConfirmPassword"></label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <br />
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Зарегистрировать</button>
+        </form>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h3>Действия после регистрации.</h3>
+            <hr />
+            <h5>1. Назначить роль пользователю в панели Управления пользователями</h5>
+            <h5>2. Сообщить пользователю его данные аутентификации</h5>
+
+            @* @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
+                            about setting up this ASP.NET application to support logging in via external services</a>.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            } *@
+            <br />
+            <h5><div style="width: 100%; height: 20px; border-bottom: 1px solid black; text-align: center">
+            <span style="background-color: #F3F5F6; padding: 0 10px;">
+                Дополнительно
+            </span>
+                </div>
+            </h5>
+            <br />
+            <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary" id="generateButton">Создать безопасный пароль</button>
+                <input class="form-control" type="text" id="generatedPassword" readonly>
+            </div>
+    <script>
+        document.getElementById('generateButton').addEventListener('click', function() {
+            var password = generatePassword(6); // Длина пароля (можете изменить)
+            document.getElementById('generatedPassword').value = password;
+        });
+
+        function generatePassword(length) {
+            var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var password = "";
+            for (var i = 0; i < length; i++) {
+                var charIndex = Math.floor(Math.random() * charset.length);
+                password += charset[charIndex];
+            }
+            if (!containsNonAlphaNumeric(password)) {
+                // Добавляем случайный неалфавитно-цифровой символ
+                var specialChars = "!-_=+.";
+                var randomSpecialChar = specialChars[Math.floor(Math.random() * specialChars.length)];
+                var randomIndex = Math.floor(Math.random() * password.length);
+                password = password.substr(0, randomIndex) + randomSpecialChar + password.substr(randomIndex);
+            }
+            if (!containsDigit(password)) {
+                // Добавляем случайную цифру
+                var randomDigit = Math.floor(Math.random() * 10);
+                var randomIndex = Math.floor(Math.random() * password.length);
+                password = password.substr(0, randomIndex) + randomDigit + password.substr(randomIndex);
+            }
+            if (!containsUppercase(password)) {
+                // Добавляем случайную заглавную букву
+                var uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                var randomUppercaseChar = uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)];
+                var randomIndex = Math.floor(Math.random() * password.length);
+                password = password.substr(0, randomIndex) + randomUppercaseChar + password.substr(randomIndex);
+            }
+            return password;
+        }
+
+        function containsNonAlphaNumeric(password) {
+            var nonAlphaNumericRegex = /[^a-zA-Z0-9]/;
+            return nonAlphaNumericRegex.test(password);
+        }
+
+        function containsDigit(password) {
+            var digitRegex = /[0-9]/;
+            return digitRegex.test(password);
+        }
+
+        function containsUppercase(password) {
+            var uppercaseRegex = /[A-Z]/;
+            return uppercaseRegex.test(password);
+        }
+    </script>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

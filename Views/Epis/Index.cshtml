@@ -1,0 +1,165 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@model IEnumerable<PreInfoTrans.Models.Epi>
+
+@{
+    ViewData["Title"] = "ЖУРНАЛ";
+}
+
+<h1>Журнал ЭПИ</h1>
+<p>
+@if (User.IsInRole("Сотрудник"))
+{
+    <a asp-action="Create" class="btn btn-success">Новая ЭПИ</a>
+}   
+</p>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Ошибка!</strong> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+}
+
+<table id="epiTable" class="table table-hover table-bordered border-dark table-sm">
+    <thead class ="text-center">
+    <th>@Html.DisplayNameFor(m => m.DocName)</th>
+    <th>@Html.DisplayNameFor(m => m.DocDate)</th>
+    <th>@Html.DisplayNameFor(m => m.Targets)</th>
+    <th>@Html.DisplayNameFor(m => m.TsmpFormatedString)</th>
+    <th>@Html.DisplayNameFor(m => m.RegNumTDTS)</th>
+    <th>@Html.DisplayNameFor(m => m.RegDateTime)</th>
+    <th>@Html.DisplayNameFor(m => m.RegNumOutTDTS)</th>
+    <th>@Html.DisplayNameFor(m => m.RegComleteDateTime)</th>
+    <th>@Html.DisplayNameFor(m => m.Result)</th>
+    <th>@Html.DisplayNameFor(m => m.RegCompleteTDTS)</th>
+    <th>@Html.DisplayNameFor(m => m.RegEndDate)</th>
+    </thead>
+    <thead class="text-center">
+        @{
+            for (int i=1; i<=11;i++)
+            {
+                <th>@i</th>
+            }
+        }
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="table-row" data-id="@item.Id">
+                <td>@Html.DisplayFor(m => item.DocName)</td>
+                <td>@Html.DisplayFor(m => item.DocDate)</td>
+                <td>@Html.DisplayFor(m => item.Targets)</td>
+                <td>@Html.DisplayFor(m => item.TsmpFormatedString)</td>
+                <td>@Html.DisplayFor(m => item.RegNumTDTS)</td>
+                <td>@Html.DisplayFor(m => item.RegDateTime)</td>
+                <td>@Html.DisplayFor(m => item.RegNumOutTDTS)</td>
+                <td>@Html.DisplayFor(m => item.RegComleteDateTime)</td>
+                <td>@Html.DisplayFor(m => item.Result)</td>
+                <td>@Html.DisplayFor(m => item.RegCompleteTDTS)</td>
+                <td>@Html.DisplayFor(m => item.RegEndDate)</td>
+           </tr>
+        }@*new Epi { Id = 1, DocName = "0000004", DocDate = new DateTime(2024, 3, 15, 22, 8, 0), Targets = Targets.TemporaryIn,
+        TsmpFormatedString = "AM65432/ВВ1232", RegNumTDTS = "11206604/150324/301234567", RegDateTime = new DateTime(2024, 3, 15, 22, 10, 0), RegNumOutTDTS = "", RegEndDate = null,
+        Result = Result.Registration, RegCompleteTDTS = "", RegComleteDateTime = null},*@
+    </tbody>
+</table>
+
+<div id="actionContainer" class="btn-toolbar" role="toolbar"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let table = document.getElementById("epiTable");
+        let rows = table.getElementsByClassName("table-row");
+
+        // Добавляем обработчик события клика на строки таблицы
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].addEventListener("click", function () {
+                // Удаляем класс "selected" у предыдущей выбранной строки
+                let selectedRow = table.querySelector(".selected");
+                if (selectedRow) {
+                    selectedRow.classList.remove("selected");
+                    selectedRow.classList.remove("table-active");
+                }
+
+                // Добавляем класс "selected" к текущей выбранной строке
+                this.classList.add("selected");
+                this.classList.add("table-active");
+                // Получаем Id выбранной строки
+                let id = this.getAttribute("data-id");
+                // Генерируем ссылку с Id и переходим по ней
+    @if (User.IsInRole("Сотрудник"))
+    {
+        <text>var editLink = generateLink("/Epis/Edit/" + id, "Редактировать", "btn-primary"); </text>
+    }
+
+                // Генерируем ссылку "Details"
+                var detailsLink = generateLink("/Epis/Details/" + id, "Просмотр", "btn-secondary");
+    @if (User.IsInRole("Сотрудник"))
+    {
+        <text>
+                    // Генерируем ссылку "Cancel"
+                        var cancelLink = generateLink("/Epis/Cancel/" + id, "Аннулировать", "btn-warning");
+                    // Генерируем ссылку "Revoke"
+                    var revokeLink = generateLink("/Epis/Revoke/" + id, "Отзыв", "btn-warning");
+        </text>
+    }
+
+                // Генерируем ссылку "Print"
+                var printLink = generateLink("/Epis/Print/" + id, "Печать", "btn-secondary");
+    @if (User.IsInRole("Сотрудник"))
+    {
+        <text>
+        // Генерируем ссылку "Send"
+                        var sendLink = generateLink("/Epis/Send/" + id, "Направить в ИСТО", "btn-success");
+        </text>
+    }
+
+    @if (User.IsInRole("Администратор"))
+    {// Генерируем ссылку "Delete"
+        <text>var deleteLink = generateLink("/Epis/Delete/" + id, "Удалить", "btn-danger"); </text>
+    }
+
+
+                // Очищаем контейнер от предыдущих ссылок
+                var actionContainer = document.getElementById("actionContainer");
+                actionContainer.innerHTML = "";
+
+                // Добавляем созданные ссылки в контейнер
+    @if (User.IsInRole("Сотрудник"))
+    {
+        <text>actionContainer.appendChild(editLink); </text>
+    }
+
+                actionContainer.appendChild(detailsLink);
+    @if (User.IsInRole("Сотрудник"))
+    {
+        <text>
+                        actionContainer.appendChild(cancelLink);
+                    actionContainer.appendChild(revokeLink);
+        </text>
+    }
+
+                    actionContainer.appendChild(printLink);
+    @if (User.IsInRole("Сотрудник"))
+    {
+        <text>
+                        actionContainer.appendChild(sendLink);
+        </text>
+    }
+    @if (User.IsInRole("Администратор"))
+    {
+        <text>actionContainer.appendChild(deleteLink); </text>
+    }
+
+                });
+        }
+    });
+
+    function generateLink(href, text, className) {
+        let link = document.createElement("a");
+        link.href = href;
+        link.textContent = text;
+        link.classList.add("btn", className, "mx-1");
+        return link;
+    }
+</script>
